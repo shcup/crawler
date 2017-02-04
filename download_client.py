@@ -9,7 +9,8 @@ print "done."
 port=51423
 
 print "Connecting to remote host on port %d..." % port,
-s.connect(("127.0.0.1", port))
+s.connect(("10.11.145.35", port))
+#s.connect(("127.0.0.1", port))
 print "done."
 
 
@@ -18,11 +19,17 @@ print "Connected to", s.getpeername()
 
 content = ""
 try:
-    send_len = s.send("http://www.toutiao.com/a6359107235901489409/")
+    send_len = s.send("http://www.toutiao.com/a6359410912260423938/")
     print send_len
-    content = s.recv(4096000)
+    while 1:
+        tmp = s.recv(409600)
+        print "Receive data length: " + str(len(tmp))
+        if tmp and len(tmp) > 0:
+            content = content + tmp
+        else:
+            break
 except :
     print "error"
 
-print content
+#print content
 s.close()

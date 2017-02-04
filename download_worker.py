@@ -19,6 +19,7 @@ def Download(req_url):
 
     if (host in last_request_time  and time.time() - last_request_time[host] < 3.0) :
         sleep_time = random.randint(3, 6)  # '%.2f' % random.random()
+        print >> sys.stderr, "sleep seconds: " + str(sleep_time)
         time.sleep(sleep_time)
 
     last_request_time[host] = time.time()
@@ -27,6 +28,7 @@ def Download(req_url):
         page = urllib2.urlopen(req, timeout=20)
         content = page.read()
     except:
+        print >> sys.stderr, "request url: " + req_url
         traceback.print_exc()
         return ""
     return content
@@ -61,11 +63,13 @@ while 1:
         content = ""
         if (len(req_url) != 0):
             content = Download(req_url)
-        print "Get data length: " + str(len(content))
-        clientsock.sendall(content)
+        send_len = clientsock.sendall(content)
+        print >> sys.stderr, "Get data length: " + str(len(content)) + ", send the data: " + str(send_len)
+
 
 
     except (KeyboardInterrupt, SystemExit):
+        print "Error"
         raise
     except:
         traceback.print_exc()
