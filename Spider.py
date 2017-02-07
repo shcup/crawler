@@ -21,7 +21,7 @@ class Spider():
                       'Chrome/50.0.2661.102 Safari/537.36'
     }
 
-    worker_list = ['10.11.145.35', '10.11.145.39', '10.11.144.116']
+    worker_list = ['10.11.145.35', '10.11.145.39', '10.11.144.116', '10.11.145.240', '10.11.145.223', '10.150.140.69']
     #worker_list = ['127.0.0.1']
     worker_cur = 0
     port = 51423
@@ -80,13 +80,14 @@ class Spider():
         return self.worker_list[self.worker_cur ]
 
     def GetContentFromWorker(self, id):
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        host = self.GetNextWorker()
-        #print >> sys.stderr, "host: " + host
-        s.connect((host, self.port))
+
 
         content = ""
         try:
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            host = self.GetNextWorker()
+            # print >> sys.stderr, "host: " + host
+            s.connect((host, self.port))
             send_len = s.send(id)
             while 1:
                 tmp = s.recv(409600)
@@ -95,9 +96,10 @@ class Spider():
                     content = content + tmp
                 else:
                     break
+            s.close()
         except:
-            print "error to get data from: " + s.getpeername()
-        s.close()
+            traceback.print_exc()
+
         return content
 
     def TryGetContent(self, id):

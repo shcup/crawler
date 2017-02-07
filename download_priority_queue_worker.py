@@ -7,6 +7,8 @@ import json
 import time
 import urlparse
 
+import Queue
+import threading
 default_headers = {
     'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) '
                   'Chrome/50.0.2661.102 Safari/537.36'
@@ -32,6 +34,21 @@ def Download(req_url):
         traceback.print_exc()
         return ""
     return content
+
+class Job(object):
+    def __init__(self, priority, queue, socket):
+        self.priority = priority
+        self.queue = queue
+        self.socket = socket
+        return
+
+    def __cmp__(self, other):
+        return cmp(self.priority, other.priority)
+
+
+
+
+
 
 
 
